@@ -12,4 +12,5 @@ exports.itemRouter.post("/", item_controller_1.addNewItem);
 exports.itemRouter.post("/:itemId", item_controller_1.addNewDateToItem);
 exports.itemRouter.delete("/:itemId", item_controller_1.deleteItem);
 exports.itemRouter.patch("/:itemId", item_controller_1.updateItemName);
+exports.itemRouter.patch("/:itemId/:dateId", item_controller_1.updateDate);
 exports.itemRouter.delete("/:itemId/:dateId", item_controller_1.deleteDate);

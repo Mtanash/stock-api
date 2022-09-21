@@ -57,6 +57,8 @@ export const getAllItems = async (
 
     result.sort("name");
 
+    result.populate({ path: "stock" });
+
     const items = await result;
 
     res.status(200).json({ data: items });
@@ -118,6 +120,9 @@ export const updateItemName = async (
     const itemId = req.params.itemId;
     const newName = req.body?.name;
 
+    if (!mongoose.Types.ObjectId.isValid(itemId))
+      throw new Error("Please provide a valid item id");
+
     const item = await Item.findById(itemId);
     if (!item) throw new Error("Item not found");
     item.name = newName;
@@ -140,6 +145,7 @@ export const deleteDate = async (
 
     if (!mongoose.Types.ObjectId.isValid(itemId))
       throw new Error("Please provide a valid item id");
+
     if (!mongoose.Types.ObjectId.isValid(dateId))
       throw new Error("Please provide a valid date id");
 
@@ -155,6 +161,42 @@ export const deleteDate = async (
     await item.save();
 
     res.status(200).json({ message: "Date deleted successfully." });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateDate = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const itemId = req.params.itemId;
+    const dateId = req.params.dateId;
+    const newQuantity = req.body?.quantity;
+
+    if (!mongoose.Types.ObjectId.isValid(itemId))
+      throw new Error("Please provide a valid item id");
+
+    if (!mongoose.Types.ObjectId.isValid(dateId))
+      throw new Error("Please provide a valid date id");
+
+    if (!newQuantity || newQuantity < 1)
+      throw new Error("Please provide a valid quantity");
+
+    const item = await Item.findById(itemId);
+    if (!item) throw new Error("Item not found");
+
+    const dateIndex = item.dates.findIndex(
+      (date) => date._id?.toString() === dateId
+    );
+    if (dateIndex < 0) throw new Error("Date not found");
+
+    item.dates[dateIndex].quantity = newQuantity;
+    await item.save();
+
+    res.status(200).json({ message: "Date quantity updated successfully." });
   } catch (error) {
     next(error);
   }

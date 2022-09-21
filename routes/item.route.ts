@@ -6,6 +6,7 @@ import {
   deleteItem,
   updateItemName,
   deleteDate,
+  updateDate,
 } from "../controllers/item.controller";
 
 export const itemRouter = express.Router();
@@ -15,4 +16,5 @@ itemRouter.post("/", addNewItem);
 itemRouter.post("/:itemId", addNewDateToItem);
 itemRouter.delete("/:itemId", deleteItem);
 itemRouter.patch("/:itemId", updateItemName);
+itemRouter.patch("/:itemId/:dateId", updateDate);
 itemRouter.delete("/:itemId/:dateId", deleteDate);

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteDate = exports.updateItemName = exports.deleteItem = exports.addNewDateToItem = exports.getAllItems = exports.addNewItem = void 0;
+exports.updateDate = exports.deleteDate = exports.updateItemName = exports.deleteItem = exports.addNewDateToItem = exports.getAllItems = exports.addNewItem = void 0;
 const item_model_1 = __importDefault(require("../models/item.model"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const stock_model_1 = __importDefault(require("../models/stock.model"));
@@ -58,6 +58,7 @@ const getAllItems = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         }
         const result = item_model_1.default.find(queryObject);
         result.sort("name");
+        result.populate({ path: "stock" });
         const items = yield result;
         res.status(200).json({ data: items });
     }
@@ -104,6 +105,8 @@ const updateItemName = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     try {
         const itemId = req.params.itemId;
         const newName = (_a = req.body) === null || _a === void 0 ? void 0 : _a.name;
+        if (!mongoose_1.default.Types.ObjectId.isValid(itemId))
+            throw new Error("Please provide a valid item id");
         const item = yield item_model_1.default.findById(itemId);
         if (!item)
             throw new Error("Item not found");
@@ -139,3 +142,30 @@ const deleteDate = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.deleteDate = deleteDate;
+const updateDate = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b;
+    try {
+        const itemId = req.params.itemId;
+        const dateId = req.params.dateId;
+        const newQuantity = (_b = req.body) === null || _b === void 0 ? void 0 : _b.quantity;
+        if (!mongoose_1.default.Types.ObjectId.isValid(itemId))
+            throw new Error("Please provide a valid item id");
+        if (!mongoose_1.default.Types.ObjectId.isValid(dateId))
+            throw new Error("Please provide a valid date id");
+        if (!newQuantity || newQuantity < 1)
+            throw new Error("Please provide a valid quantity");
+        const item = yield item_model_1.default.findById(itemId);
+        if (!item)
+            throw new Error("Item not found");
+        const dateIndex = item.dates.findIndex((date) => { var _a; return ((_a = date._id) === null || _a === void 0 ? void 0 : _a.toString()) === dateId; });
+        if (dateIndex < 0)
+            throw new Error("Date not found");
+        item.dates[dateIndex].quantity = newQuantity;
+        yield item.save();
+        res.status(200).json({ message: "Date quantity updated successfully." });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.updateDate = updateDate;
