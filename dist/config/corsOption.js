@@ -1,6 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const whitelist = ["http://localhost:3000", "http://localhost:3001"];
+const whitelist = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://stock-app-gold.vercel.app/",
+];
 const corsOption = {
     origin: (origin, callback) => {
         if (whitelist.indexOf(origin) !== -1 || !origin) {
