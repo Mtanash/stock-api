@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import mongoose from "mongoose";
 import Stock from "../models/stock.model";
 
 export const addNewStock = async (
@@ -18,7 +19,7 @@ export const addNewStock = async (
 };
 
 export const getAllStocks = async (
-  req: Request,
+  _: Request,
   res: Response,
   next: NextFunction
 ) => {
@@ -26,6 +27,27 @@ export const getAllStocks = async (
     const stocks = await Stock.find();
 
     res.status(200).json({ data: stocks });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteStock = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const stockId = req.params.stockId;
+
+    if (!mongoose.Types.ObjectId.isValid(stockId))
+      throw new Error("Please provide a valid item id");
+
+    if (!(await Stock.findById(stockId))) throw new Error("Stock not found");
+
+    await Stock.findByIdAndDelete(stockId);
+
+    res.status(200).json({ message: "Stock deleted successfully." });
   } catch (error) {
     next(error);
   }

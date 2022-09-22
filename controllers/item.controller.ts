@@ -20,6 +20,7 @@ export const addNewItem = async (
     const itemExist = await Item.findOne({
       name: item.name.toLowerCase().trim(),
     });
+
     if (!itemExist) {
       await Item.create({
         name: item.name,
@@ -49,7 +50,7 @@ export const getAllItems = async (
     const { stock } = req.query;
     const queryObject: { stock?: string } = {};
 
-    if (stock) {
+    if (stock && stock !== "undefined") {
       queryObject.stock = stock.toString();
     }
 
