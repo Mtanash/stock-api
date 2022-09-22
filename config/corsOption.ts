@@ -1,8 +1,9 @@
 const whitelist = [
   "http://localhost:3000",
-  "http://localhost:3001",
   "https://stock-app-gold.vercel.app/",
   "https://stock-lrobth1t0-mtanash.vercel.app/",
+  "https://stock-app-git-main-mtanash.vercel.app/",
+  "https://main.d3k7987c8gyk0m.amplifyapp.com/",
 ];
 
 const corsOption = {
