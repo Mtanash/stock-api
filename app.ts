@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import express, { Express, Request, Response } from "express";
+import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import corsOption from "./config/corsOption";
@@ -12,7 +12,7 @@ import errorMiddleware from "./middlewares/error.middleware";
 import { itemRouter } from "./routes/item.route";
 import { stockRouter } from "./routes/stock.route";
 
-export const app: Express = express();
+export const app: Application = express();
 app.use(express.json());
 app.use(helmet());
 app.use(cookieParser());
