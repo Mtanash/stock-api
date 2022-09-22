@@ -1,5 +1,6 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
+import Item from "../models/item.model";
 import Stock from "../models/stock.model";
 
 export const addNewStock = async (
@@ -46,6 +47,8 @@ export const deleteStock = async (
     if (!(await Stock.findById(stockId))) throw new Error("Stock not found");
 
     await Stock.findByIdAndDelete(stockId);
+
+    await Item.deleteMany({ stock: stockId });
 
     res.status(200).json({ message: "Stock deleted successfully." });
   } catch (error) {
