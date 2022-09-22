@@ -4,6 +4,7 @@ const whitelist = [
     "http://localhost:3000",
     "http://localhost:3001",
     "https://stock-app-gold.vercel.app/",
+    "https://stock-lrobth1t0-mtanash.vercel.app/",
 ];
 const corsOption = {
     origin: (origin, callback) => {
