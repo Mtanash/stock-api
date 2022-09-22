@@ -2,9 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import express, { Application, Request, Response } from "express";
-import cors from "cors";
 import cookieParser from "cookie-parser";
-import corsOption from "./config/corsOption";
 import limiter from "./config/limiter";
 import { connectDB } from "./db/connect";
 import helmet from "helmet";
@@ -16,8 +14,6 @@ export const app: Application = express();
 app.use(express.json());
 app.use(helmet());
 app.use(cookieParser());
-app.use(cors(corsOption));
-app.options("*", cors(corsOption));
 app.use(limiter);
 
 connectDB(process.env.MONGODB_CONNECTION_URL as string);
