@@ -17,6 +17,7 @@ app.use(express.json());
 app.use(helmet());
 app.use(cookieParser());
 app.use(cors());
+app.options("*", cors());
 app.use(limiter);
 
 connectDB(process.env.MONGODB_CONNECTION_URL as string);

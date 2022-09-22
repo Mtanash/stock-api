@@ -20,6 +20,7 @@ exports.app.use(express_1.default.json());
 exports.app.use((0, helmet_1.default)());
 exports.app.use((0, cookie_parser_1.default)());
 exports.app.use((0, cors_1.default)());
+exports.app.options("*", (0, cors_1.default)());
 exports.app.use(limiter_1.default);
 (0, connect_1.connectDB)(process.env.MONGODB_CONNECTION_URL);
 exports.app.get("/", (_, res) => {
