@@ -16,7 +16,7 @@ export const app: Application = express();
 app.use(express.json());
 app.use(helmet());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors(corsOption));
 app.options("*", cors());
 app.use(limiter);
 
