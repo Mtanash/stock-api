@@ -5,14 +5,12 @@ import express, { Application, Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import limiter from "./config/limiter";
 import { connectDB } from "./db/connect";
-import helmet from "helmet";
 import errorMiddleware from "./middlewares/error.middleware";
 import { itemRouter } from "./routes/item.route";
 import { stockRouter } from "./routes/stock.route";
 
 export const app: Application = express();
 app.use(express.json());
-app.use(helmet());
 app.use(cookieParser());
 app.use(limiter);
 
