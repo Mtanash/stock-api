@@ -1,20 +1,21 @@
 import express from "express";
 import {
-  addNewItem,
-  getAllItems,
   addNewDateToItem,
-  deleteItem,
-  updateItemName,
+  addNewItem,
   deleteDate,
+  deleteItem,
+  getAllItems,
   updateDate,
+  updateItemName,
 } from "../controllers/item.controller";
+import validateTokenMiddleware from "../middlewares/auth.middleware";
 
 export const itemRouter = express.Router();
 
 itemRouter.get("/", getAllItems);
-itemRouter.post("/", addNewItem);
-itemRouter.post("/:itemId", addNewDateToItem);
-itemRouter.delete("/:itemId", deleteItem);
-itemRouter.patch("/:itemId", updateItemName);
-itemRouter.patch("/:itemId/:dateId", updateDate);
-itemRouter.delete("/:itemId/:dateId", deleteDate);
+itemRouter.post("/", validateTokenMiddleware, addNewItem);
+itemRouter.post("/:itemId", validateTokenMiddleware, addNewDateToItem);
+itemRouter.delete("/:itemId", validateTokenMiddleware, deleteItem);
+itemRouter.patch("/:itemId", validateTokenMiddleware, updateItemName);
+itemRouter.patch("/:itemId/:dateId", validateTokenMiddleware, updateDate);
+itemRouter.delete("/:itemId/:dateId", validateTokenMiddleware, deleteDate);

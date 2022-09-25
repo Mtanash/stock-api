@@ -1,16 +1,17 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import express, { Application, Request, Response } from "express";
-import cors from "cors";
 import cookieParser from "cookie-parser";
+import cors from "cors";
+import express, { Application, Request, Response } from "express";
+import helmet from "helmet";
 import corsOption from "./config/corsOption";
 import limiter from "./config/limiter";
 import { connectDB } from "./db/connect";
-import helmet from "helmet";
 import errorMiddleware from "./middlewares/error.middleware";
 import { itemRouter } from "./routes/item.route";
 import { stockRouter } from "./routes/stock.route";
+import userRouter from "./routes/user.route";
 
 export const app: Application = express();
 app.use(express.json());
@@ -26,6 +27,7 @@ app.get("/", (_: Request, res: Response) => {
   res.send("<h1>Stock API Working 🚀🚀</h1>");
 });
 
+app.use("/users", userRouter);
 app.use("/items", itemRouter);
 app.use("/stocks", stockRouter);
 

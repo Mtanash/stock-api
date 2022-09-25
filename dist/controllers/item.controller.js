@@ -53,7 +53,7 @@ const getAllItems = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     try {
         const { stock } = req.query;
         const queryObject = {};
-        if (stock) {
+        if (stock && stock !== "undefined") {
             queryObject.stock = stock.toString();
         }
         const result = item_model_1.default.find(queryObject);
