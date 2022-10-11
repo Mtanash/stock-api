@@ -1,42 +1,49 @@
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import Error from "../interfaces/error.interface";
+import User from "../models/user.model";
 
-const handleUnauthorizedError = (next: NextFunction) => {
-  const error: Error = new Error("Please authenticate");
-  error.status = 401;
+const handleUnauthorizedError = (
+  next: NextFunction,
+  message?: string,
+  status?: number
+) => {
+  const error: Error = new Error(message || "Please authenticate");
+  error.status = status || 401;
   next(error);
 };
 
-const validateTokenMiddleware = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const authHeader = req.get("authorization");
+const validationMiddleware =
+  ({ userRole }: { userRole: "user" | "admin" }) =>
+  async (req: Request, _res: Response, next: NextFunction) => {
+    try {
+      const authHeader = req.get("authorization");
 
-    if (authHeader) {
-      const bearer = authHeader.split(" ")[0];
-      const token = authHeader.split(" ")[1];
+      if (authHeader) {
+        const bearer = authHeader.split(" ")[0];
+        const token = authHeader.split(" ")[1];
 
-      if (!token || bearer !== "Bearer") {
-        handleUnauthorizedError(next);
-      } else {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
-
-        if (decoded) {
-          next();
-        } else {
+        if (!token || bearer !== "Bearer") {
           handleUnauthorizedError(next);
-        }
-      }
-    } else {
-      handleUnauthorizedError(next);
-    }
-  } catch (error) {
-    next(error);
-  }
-};
+        } else {
+          const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
 
-export default validateTokenMiddleware;
+          const id = (decoded as JwtPayload).id;
+
+          const user = await User.findById(id);
+
+          if (decoded && user?.role === userRole) {
+            next();
+          } else {
+            handleUnauthorizedError(next, "Not allowed", 403);
+          }
+        }
+      } else {
+        handleUnauthorizedError(next);
+      }
+    } catch (error) {
+      next(error);
+    }
+  };
+
+export default validationMiddleware;

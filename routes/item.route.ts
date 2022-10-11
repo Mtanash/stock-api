@@ -8,14 +8,34 @@ import {
   updateDate,
   updateItemName,
 } from "../controllers/item.controller";
-import validateTokenMiddleware from "../middlewares/auth.middleware";
+import validationMiddleware from "../middlewares/auth.middleware";
 
 export const itemRouter = express.Router();
 
 itemRouter.get("/", getAllItems);
-itemRouter.post("/", validateTokenMiddleware, addNewItem);
-itemRouter.post("/:itemId", validateTokenMiddleware, addNewDateToItem);
-itemRouter.delete("/:itemId", validateTokenMiddleware, deleteItem);
-itemRouter.patch("/:itemId", validateTokenMiddleware, updateItemName);
-itemRouter.patch("/:itemId/:dateId", validateTokenMiddleware, updateDate);
-itemRouter.delete("/:itemId/:dateId", validateTokenMiddleware, deleteDate);
+itemRouter.post("/", validationMiddleware({ userRole: "user" }), addNewItem);
+itemRouter.post(
+  "/:itemId",
+  validationMiddleware({ userRole: "user" }),
+  addNewDateToItem
+);
+itemRouter.delete(
+  "/:itemId",
+  validationMiddleware({ userRole: "user" }),
+  deleteItem
+);
+itemRouter.patch(
+  "/:itemId",
+  validationMiddleware({ userRole: "user" }),
+  updateItemName
+);
+itemRouter.patch(
+  "/:itemId/:dateId",
+  validationMiddleware({ userRole: "user" }),
+  updateDate
+);
+itemRouter.delete(
+  "/:itemId/:dateId",
+  validationMiddleware({ userRole: "user" }),
+  deleteDate
+);

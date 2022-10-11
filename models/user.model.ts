@@ -7,6 +7,7 @@ interface IUser {
   name: string;
   password: string;
   avatar?: string;
+  role: string;
 }
 
 interface UserModel extends Model<IUser> {
@@ -28,6 +29,10 @@ const userSchema = new Schema<IUser, UserModel>({
   },
   avatar: {
     type: String,
+  },
+  role: {
+    type: String,
+    default: "user",
   },
 });
 

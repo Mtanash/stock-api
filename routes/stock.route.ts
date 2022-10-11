@@ -4,10 +4,14 @@ import {
   deleteStock,
   getAllStocks,
 } from "../controllers/stock.controller";
-import validateTokenMiddleware from "../middlewares/auth.middleware";
+import validationMiddleware from "../middlewares/auth.middleware";
 
 export const stockRouter = express.Router();
 
-stockRouter.post("/", validateTokenMiddleware, addNewStock);
+stockRouter.post("/", validationMiddleware({ userRole: "admin" }), addNewStock);
 stockRouter.get("/", getAllStocks);
-stockRouter.delete("/:stockId", validateTokenMiddleware, deleteStock);
+stockRouter.delete(
+  "/:stockId",
+  validationMiddleware({ userRole: "admin" }),
+  deleteStock
+);
