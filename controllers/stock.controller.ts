@@ -10,9 +10,9 @@ export const addNewStock = async (
   next: NextFunction
 ) => {
   try {
-    const stock = req.body;
+    const stockData = req.body;
 
-    await Stock.create(stock);
+    const stock = await Stock.create(stockData);
 
     res
       .status(201)

@@ -15,7 +15,7 @@ userRouter.post("/", createNewUser);
 userRouter.get("/:userId", getUserById);
 userRouter.delete(
   "/:userId",
-  validationMiddleware({ userRole: "admin" }),
+  validationMiddleware({ userRoles: ["admin"] }),
   deleteUser
 );
 userRouter.post("/login", loginUser);

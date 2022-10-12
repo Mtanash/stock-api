@@ -11,29 +11,33 @@ import validationMiddleware from "../middlewares/auth.middleware";
 
 export const itemRouter = express.Router();
 
-itemRouter.post("/", validationMiddleware({ userRole: "user" }), addNewItem);
+itemRouter.post(
+  "/",
+  validationMiddleware({ userRoles: ["user", "admin"] }),
+  addNewItem
+);
 itemRouter.post(
   "/:stockId/:itemId",
-  validationMiddleware({ userRole: "user" }),
+  validationMiddleware({ userRoles: ["user", "admin"] }),
   addNewDateToItem
 );
 itemRouter.delete(
   "/:stockId/:itemId",
-  validationMiddleware({ userRole: "user" }),
+  validationMiddleware({ userRoles: ["user", "admin"] }),
   deleteItem
 );
 itemRouter.patch(
   "/:itemId",
-  validationMiddleware({ userRole: "user" }),
+  validationMiddleware({ userRoles: ["user", "admin"] }),
   updateItemName
 );
 itemRouter.patch(
   "/:itemId/:dateId",
-  validationMiddleware({ userRole: "user" }),
+  validationMiddleware({ userRoles: ["user", "admin"] }),
   updateDate
 );
 itemRouter.delete(
   "/:itemId/:dateId",
-  validationMiddleware({ userRole: "user" }),
+  validationMiddleware({ userRoles: ["user", "admin"] }),
   deleteDate
 );

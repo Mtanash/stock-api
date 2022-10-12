@@ -14,7 +14,7 @@ const handleUnauthorizedError = (
 };
 
 const validationMiddleware =
-  ({ userRole }: { userRole: "user" | "admin" }) =>
+  ({ userRoles }: { userRoles: string[] }) =>
   async (req: Request, _res: Response, next: NextFunction) => {
     try {
       const authHeader = req.get("authorization");
@@ -32,7 +32,7 @@ const validationMiddleware =
 
           const user = await User.findById(id);
 
-          if (decoded && user?.role === userRole) {
+          if (decoded && userRoles.includes(user?.role as string)) {
             next();
           } else {
             handleUnauthorizedError(next, "Not allowed", 403);

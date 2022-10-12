@@ -119,10 +119,11 @@ export const deleteItem = async (
 
     const deletedItem = await Item.findByIdAndDelete(itemId);
 
-    stock.items.filter(
+    const newItems = stock.items.filter(
       (item) => item._id.toString() !== deletedItem?._id.toString()
     );
 
+    stock.items = newItems;
     await stock.save();
 
     res
