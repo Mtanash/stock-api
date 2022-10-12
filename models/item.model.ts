@@ -1,8 +1,7 @@
-import mongoose, { Types } from "mongoose";
+import mongoose from "mongoose";
 
-interface IItem {
+export interface IItem {
   _id?: string;
-  stock: Types.ObjectId;
   name: string;
   dates: {
     _id?: string;
@@ -16,10 +15,6 @@ interface IItem {
 
 const itemSchema = new mongoose.Schema<IItem>(
   {
-    stock: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "stock",
-    },
     name: {
       type: String,
       required: [true, "Please provide a valid name"],

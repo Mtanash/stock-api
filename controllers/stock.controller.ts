@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import Item from "../models/item.model";
 import Stock from "../models/stock.model";
+import { IItem } from "./../models/item.model";
 
 export const addNewStock = async (
   req: Request,
@@ -13,19 +14,29 @@ export const addNewStock = async (
 
     await Stock.create(stock);
 
-    res.status(201).json({ message: "Stock created successfully." });
+    res
+      .status(201)
+      .json({ message: "Stock created successfully.", data: stock });
   } catch (error) {
     next(error);
   }
 };
 
 export const getAllStocks = async (
-  _: Request,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const stocks = await Stock.find();
+    const { populated } = req.query;
+
+    let stocks;
+
+    if (populated && populated === "true") {
+      stocks = await Stock.find().populate<{ items: IItem[] }>("items");
+    } else {
+      stocks = await Stock.find();
+    }
 
     res.status(200).json({ data: stocks });
   } catch (error) {
@@ -46,9 +57,12 @@ export const deleteStock = async (
 
     if (!(await Stock.findById(stockId))) throw new Error("Stock not found");
 
-    await Stock.findByIdAndDelete(stockId);
+    const stock = await Stock.findById(stockId);
+    stock?.items.forEach(async (item) => {
+      await Item.findByIdAndDelete(item._id);
+    });
 
-    await Item.deleteMany({ stock: stockId });
+    await Stock.findByIdAndDelete(stockId);
 
     res.status(200).json({ message: "Stock deleted successfully." });
   } catch (error) {

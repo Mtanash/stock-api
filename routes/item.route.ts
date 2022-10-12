@@ -4,7 +4,6 @@ import {
   addNewItem,
   deleteDate,
   deleteItem,
-  getAllItems,
   updateDate,
   updateItemName,
 } from "../controllers/item.controller";
@@ -12,15 +11,14 @@ import validationMiddleware from "../middlewares/auth.middleware";
 
 export const itemRouter = express.Router();
 
-itemRouter.get("/", getAllItems);
 itemRouter.post("/", validationMiddleware({ userRole: "user" }), addNewItem);
 itemRouter.post(
-  "/:itemId",
+  "/:stockId/:itemId",
   validationMiddleware({ userRole: "user" }),
   addNewDateToItem
 );
 itemRouter.delete(
-  "/:itemId",
+  "/:stockId/:itemId",
   validationMiddleware({ userRole: "user" }),
   deleteItem
 );

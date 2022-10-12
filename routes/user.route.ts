@@ -1,4 +1,5 @@
 import express from "express";
+import validationMiddleware from "../middlewares/auth.middleware";
 import {
   createNewUser,
   deleteUser,
@@ -12,6 +13,9 @@ export default userRouter;
 
 userRouter.post("/", createNewUser);
 userRouter.get("/:userId", getUserById);
-userRouter.delete("/:userId", deleteUser);
-
+userRouter.delete(
+  "/:userId",
+  validationMiddleware({ userRole: "admin" }),
+  deleteUser
+);
 userRouter.post("/login", loginUser);
