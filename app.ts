@@ -5,7 +5,6 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Application, Request, Response } from "express";
 import helmet from "helmet";
-// import swaggerUi from "swagger-ui-express";
 import corsOption from "./config/corsOption";
 import limiter from "./config/limiter";
 import { connectDB } from "./db/connect";
@@ -13,7 +12,6 @@ import errorMiddleware from "./middlewares/error.middleware";
 import { itemRouter } from "./routes/item.route";
 import { stockRouter } from "./routes/stock.route";
 import userRouter from "./routes/user.route";
-// import swaggerDocument from "./swagger.json";
 
 export const app: Application = express();
 app.use(express.json());
@@ -24,8 +22,6 @@ app.options("*", cors());
 app.use(limiter);
 
 connectDB(process.env.MONGODB_CONNECTION_URL as string);
-
-// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get("/", (_: Request, res: Response) => {
   res.send("<h1>Stock API Working 🚀🚀</h1>");
