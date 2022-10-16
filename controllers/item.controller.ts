@@ -63,34 +63,23 @@ export const addNewDateToItem = async (
 ) => {
   try {
     const itemId = req.params.itemId;
-    const stockId = req.params.stockId;
 
     if (!mongoose.Types.ObjectId.isValid(itemId))
       throw new Error("Please provide a valid item id");
 
-    if (!mongoose.Types.ObjectId.isValid(stockId))
-      throw new Error("Please provide a valid stock id");
-
     const newDate: Date = req.body;
 
-    const stock = await Stock.findById(stockId).populate<{ items: IItem[] }>(
-      "items"
-    );
-    if (!stock) throw new Error("Stock not found");
+    const item = await Item.findById(itemId);
 
-    const itemIndex = stock.items.findIndex(
-      (item) => item._id?.toString() === itemId
-    );
+    if (!item) throw new Error("Item not found");
 
-    if (itemIndex === -1) throw new Error("Item not found");
+    item.dates.push(newDate);
 
-    stock.items[itemIndex].dates.push(newDate);
-
-    await stock.save();
+    await item.save();
 
     res.status(200).json({
       message: "New date added successfully.",
-      data: stock.items[itemIndex],
+      data: item,
     });
   } catch (error) {
     next(error);

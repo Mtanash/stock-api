@@ -17,10 +17,17 @@ itemRouter.post(
   addNewItem
 );
 itemRouter.post(
-  "/:stockId/:itemId",
+  "/:itemId",
   validationMiddleware({ userRoles: ["user", "admin"] }),
   addNewDateToItem
 );
+
+itemRouter.delete(
+  "/:itemId/date/:dateId",
+  validationMiddleware({ userRoles: ["user", "admin"] }),
+  deleteDate
+);
+
 itemRouter.delete(
   "/:stockId/:itemId",
   validationMiddleware({ userRoles: ["user", "admin"] }),
@@ -35,9 +42,4 @@ itemRouter.patch(
   "/:itemId/:dateId",
   validationMiddleware({ userRoles: ["user", "admin"] }),
   updateDate
-);
-itemRouter.delete(
-  "/:itemId/:dateId",
-  validationMiddleware({ userRoles: ["user", "admin"] }),
-  deleteDate
 );

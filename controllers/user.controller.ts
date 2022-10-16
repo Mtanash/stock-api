@@ -28,7 +28,7 @@ export const createNewUser = async (
     res.status(201).json({
       message: "User created successfully",
       data: {
-        user: { name: user.name, _id: user._id },
+        user: { name: user.name, _id: user._id, role: user.role },
         accessToken,
       },
     });
@@ -52,7 +52,9 @@ export const getUserById = async (
 
     if (!user) throw new Error("User not found");
 
-    res.status(200).json({ data: { name: user.name, _id: user._id } });
+    res
+      .status(200)
+      .json({ data: { name: user.name, _id: user._id, role: user.role } });
   } catch (error) {
     next(error);
   }
@@ -96,7 +98,7 @@ export const loginUser = async (
     res.status(200).json({
       message: "User Logged in successfully",
       data: {
-        user: { name: user.name, _id: user._id },
+        user: { name: user.name, _id: user._id, role: user.role },
         accessToken,
       },
     });
