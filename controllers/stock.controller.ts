@@ -53,7 +53,7 @@ export const deleteStock = async (
     const stockId = req.params.stockId;
 
     if (!mongoose.Types.ObjectId.isValid(stockId))
-      throw new Error("Please provide a valid item id");
+      throw new Error("Please provide a valid stock id");
 
     if (!(await Stock.findById(stockId))) throw new Error("Stock not found");
 
@@ -65,6 +65,58 @@ export const deleteStock = async (
     await Stock.findByIdAndDelete(stockId);
 
     res.status(200).json({ message: "Stock deleted successfully." });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getStock = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const stockId = req.params.stockId;
+    const { populated } = req.query;
+
+    if (!mongoose.Types.ObjectId.isValid(stockId))
+      throw new Error("Please provide a valid stock id");
+
+    let stock;
+    if (populated === "true") {
+      stock = await Stock.findById(stockId).populate<{ items: IItem[] }>(
+        "items"
+      );
+    } else {
+      stock = await Stock.findById(stockId);
+    }
+
+    if (!stock) throw new Error("Stock not found");
+
+    res.status(200).json({ data: stock });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getStockItems = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const stockId = req.params.stockId;
+
+    if (!mongoose.Types.ObjectId.isValid(stockId))
+      throw new Error("Please provide a valid stock id");
+
+    const stock = await Stock.findById(stockId).populate<{ items: IItem[] }>(
+      "items"
+    );
+
+    if (!stock) throw new Error("Stock not found");
+
+    res.status(200).json({ data: stock.items });
   } catch (error) {
     next(error);
   }

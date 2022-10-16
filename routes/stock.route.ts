@@ -3,6 +3,8 @@ import {
   addNewStock,
   deleteStock,
   getAllStocks,
+  getStock,
+  getStockItems,
 } from "../controllers/stock.controller";
 import validationMiddleware from "../middlewares/auth.middleware";
 
@@ -14,6 +16,8 @@ stockRouter.post(
   addNewStock
 );
 stockRouter.get("/", getAllStocks);
+stockRouter.get("/:stockId", getStock);
+stockRouter.get("/:stockId/items", getStockItems);
 stockRouter.delete(
   "/:stockId",
   validationMiddleware({ userRoles: ["admin"] }),
